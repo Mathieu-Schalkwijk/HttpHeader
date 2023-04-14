@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContentTypeFrequency.cs" />
     <Compile Include="ServerAge.cs" />
     <Compile Include="ServerFrequency.cs" />
     <Compile Include="Program.cs" />

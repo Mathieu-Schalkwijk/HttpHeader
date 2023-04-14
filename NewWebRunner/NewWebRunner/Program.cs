@@ -16,6 +16,7 @@ namespace NewWebRunner
 
             ServerFrequency serverFrequency = new ServerFrequency();
             ServerAge serverAge = new ServerAge();
+            ContentTypeFrequency contentTypeFrequency = new ContentTypeFrequency();
 
             List<string> webServerAddresses = new List<string>
             {
@@ -33,6 +34,7 @@ namespace NewWebRunner
 
             string port = "5000";
 
+            //Start server
             string baseDirectory = Directory.GetCurrentDirectory();
             HttpListener listener = new HttpListener();
             listener.Prefixes.Add($"http://localhost:{port}/");
@@ -67,23 +69,30 @@ namespace NewWebRunner
                 }
                 else if (request.Url.AbsolutePath == "/scenario")
                 {
-                    int id = int.Parse(request.QueryString["id"]);
+                    int id = int.Parse(request.QueryString["id"]);//get scenario number
                     string result = "";
                     switch (id)
                     {
                         case 1:
+                            //case 1 : servers statistics
                             (string string1, Dictionary<string, int> serverStats) = await serverFrequency.GetServerStatisticsAsync(webServerAddresses);
-                            result= string1;
+                            result = string1;
                             break;
                         case 2:
+                            //case 2 : average age and standard deviation
                             (string string2, double averageAge, double standardDeviation) = await serverAge.CalculateAverageAndStandardDeviationAsync(webServerAddresses);
                             result = string2;
+                            break;
+                        case 3:
+                            (string string3, Dictionary<string, int> stats) = await contentTypeFrequency.GetContentTypeStatisticsAsync(webServerAddresses);
+                            result = string3;
                             break;
                         default:
                             result = $"There is no scenario {id}";
                             break;
                     }
 
+                    //return a string to the web interface
                     byte[] buffer = Encoding.UTF8.GetBytes(result);
                     response.ContentLength64 = buffer.Length;
                     response.ContentType = "text/plain";
