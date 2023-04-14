@@ -86,15 +86,18 @@ namespace NewWebRunner
                             result = string2;
                             break;
                         case 3:
-                            (string string3, Dictionary<string, int> stats) = await contentTypeFrequency.GetContentTypeStatisticsAsync(webServerAddresses);
-                            result = string3;
-                            break;
-                        case 4:
+                            //case 3: redirection counter
                             result = await redirectionCounter.GetRedirectionStatisticsAsync(webServerAddresses);
                             break;
-                        case 5:
+                        case 4:
+                            //case 4: response time
                             (string string5, double averageResponseTime) = await responseTimeStatistics.GetResponseTimeStatisticsAsync(webServerAddresses);
                             result = string5;
+                            break;
+                        case 5:
+                            //case 5: content type statistics
+                            (string string3, Dictionary<string, int> stats) = await contentTypeFrequency.GetContentTypeStatisticsAsync(webServerAddresses);
+                            result = string3;
                             break;
                         default:
                             result = $"There is no scenario {id}";

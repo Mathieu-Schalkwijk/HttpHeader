@@ -60,7 +60,7 @@ namespace NewWebRunner
                 stringResult.AppendLine($"{address}: {responseTimes[webServerAddresses.IndexOf(address)]}");
             }
 
-            stringResult.AppendLine("\nAverage response time (in milliseconds):\n");
+            stringResult.AppendLine("\nAverage response time (in milliseconds):");
             stringResult.AppendLine($"{averageResponseTime}");
 
             return (stringResult.ToString(), averageResponseTime);
