@@ -1,0 +1,66 @@
+# bin and obj folders
+*/bin/
+*/obj/
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+build/
+[Bb]in/
+
+# Visual Studio files
+*.vs/
+*.suo
+*.vssscc
+*.user
+*.psess
+*.vsp
+*.vspx
+*.userprefs
+*.inf
+
+# Resharper files
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+*.ReSharper.user
+
+# GhostDoc plugin settings
+*.GhostDoc.xml
+
+# Visual Studio Code files
+.vscode/
+
+# NuGet packages
+packages/
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# NCrunch
+_NCrunch_*
+*.ncrunch*
+.*crunch*.local.xml
+nCrunchTemp_*
+
+# Installshield output folder
+[Ee]xpress/
+
+# DocFX output folder
+/_site/
+
+# Misc
+*.cache
+*.log
+*.backup
+*.bak
+*.patch
+*.md
