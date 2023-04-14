@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="ContentTypeFrequency.cs" />
     <Compile Include="RedirectionCounter.cs" />
+    <Compile Include="ResponseTimeStatistics.cs" />
     <Compile Include="ServerAge.cs" />
     <Compile Include="ServerFrequency.cs" />
     <Compile Include="Program.cs" />
