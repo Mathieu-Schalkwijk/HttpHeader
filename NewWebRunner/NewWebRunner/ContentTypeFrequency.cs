@@ -11,14 +11,16 @@ namespace NewWebRunner
     {
         public async Task<(string, Dictionary<string, int>)> GetContentTypeStatisticsAsync(List<string> webServerAddresses)
         {
-            string stringResult = string.Empty;
+            StringBuilder stringResult = new StringBuilder();
 
             Dictionary<string, int> contentTypeStats = new Dictionary<string, int>();
 
             using (HttpClient client = new HttpClient())
             {
-                foreach (string address in webServerAddresses)
+                var tasks = webServerAddresses.Select(async address =>
                 {
+                    string contentType = string.Empty;
+
                     try
                     {
                         HttpResponseMessage response = await client.GetAsync(address);
@@ -27,16 +29,7 @@ namespace NewWebRunner
                         {
                             if (response.Content.Headers.Contains("Content-Type"))
                             {
-                                string contentType = response.Content.Headers.ContentType.MediaType;
-
-                                if (contentTypeStats.ContainsKey(contentType))
-                                {
-                                    contentTypeStats[contentType]++;
-                                }
-                                else
-                                {
-                                    contentTypeStats[contentType] = 1;
-                                }
+                                contentType = response.Content.Headers.ContentType.MediaType;
                             }
                         }
                     }
@@ -44,26 +37,45 @@ namespace NewWebRunner
                     {
                         Console.WriteLine($"Error for URL {address}: {ex.Message}");
                     }
+
+                    return (address, contentType);
+                });
+
+                var results = await Task.WhenAll(tasks);
+
+                foreach (var (address, contentType) in results)
+                {
+                    if (!string.IsNullOrEmpty(contentType))
+                    {
+                        if (contentTypeStats.ContainsKey(contentType))
+                        {
+                            contentTypeStats[contentType]++;
+                        }
+                        else
+                        {
+                            contentTypeStats[contentType] = 1;
+                        }
+                    }
                 }
             }
 
-            stringResult += "Content-Type Popularity Statistics:\n\n";
+            stringResult.AppendLine("Content-Type Popularity Statistics:\n\n");
 
             //display results
-            stringResult += "List of URLS:\n\n";
+            stringResult.AppendLine("List of URLS:\n");
             foreach (string address in webServerAddresses)
             {
-                stringResult += address + "\n";
+                stringResult.AppendLine(address);
             }
 
-            stringResult += "\nFrequences of content-types\n\n";
+            stringResult.AppendLine("\nFrequences of content-types\n");
 
             foreach (KeyValuePair<string, int> stat in contentTypeStats)
             {
-                stringResult += $"{stat.Key}: {stat.Value}\n";
+                stringResult.AppendLine($"{stat.Key}: {stat.Value}");
             }
 
-            return (stringResult, contentTypeStats);
+            return (stringResult.ToString(), contentTypeStats);
         }
     }
 }

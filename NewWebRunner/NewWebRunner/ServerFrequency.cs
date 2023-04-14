@@ -11,15 +11,17 @@ namespace NewWebRunner
     {
         public async Task<(string, Dictionary<string, int>)> GetServerStatisticsAsync(List<string> webServerAddresses)
         {
-            string stringResult = string.Empty;
+            StringBuilder stringResult = new StringBuilder();
 
             Dictionary<string, int> serverStats = new Dictionary<string, int>();
             serverStats["NotFound"] = 0; //when response does not include "Server"
 
             using (HttpClient client = new HttpClient())
             {
-                foreach (string address in webServerAddresses)
+                var tasks = webServerAddresses.Select(async address =>
                 {
+                    string serverType = "NotFound";
+
                     try
                     {
                         HttpResponseMessage response = await client.GetAsync(address);
@@ -28,20 +30,7 @@ namespace NewWebRunner
                         {
                             if (response.Headers.Contains("Server"))
                             {
-                                string serverType = response.Headers.GetValues("Server").FirstOrDefault();
-
-                                if (serverStats.ContainsKey(serverType))
-                                {
-                                    serverStats[serverType]++;
-                                }
-                                else
-                                {
-                                    serverStats[serverType] = 1;
-                                }
-                            }
-                            else
-                            {
-                                serverStats["NotFound"]++;
+                                serverType = response.Headers.GetValues("Server").FirstOrDefault();
                             }
                         }
                     }
@@ -49,27 +38,42 @@ namespace NewWebRunner
                     {
                         Console.WriteLine($"Error for URL {address}: {ex.Message}");
                     }
+
+                    return (address, serverType);
+                });
+
+                var results = await Task.WhenAll(tasks);
+
+                foreach (var (address, serverType) in results)
+                {
+                    if (serverStats.ContainsKey(serverType))
+                    {
+                        serverStats[serverType]++;
+                    }
+                    else
+                    {
+                        serverStats[serverType] = 1;
+                    }
                 }
             }
 
-            stringResult += "Server Popularity Statistics:\n\n";
-
+            stringResult.AppendLine("Server Popularity Statistics:\n\n");
 
             //display results
-            stringResult += "List of URLS:\n\n";
+            stringResult.AppendLine("List of URLS:\n");
             foreach (string address in webServerAddresses)
             {
-                stringResult += address + "\n";
+                stringResult.AppendLine(address);
             }
 
-            stringResult += "\nFrequences of servers (NotFound for response headers which do not contains a server):";
+            stringResult.AppendLine("\nFrequences of servers (NotFound for response headers which do not contains a server):\n");
 
             foreach (KeyValuePair<string, int> stat in serverStats)
             {
-                stringResult += $"{stat.Key}: {stat.Value}\n";
+                stringResult.AppendLine($"{stat.Key}: {stat.Value}");
             }
 
-            return (stringResult, serverStats);
+            return (stringResult.ToString(), serverStats);
         }
     }
 }

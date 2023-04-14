@@ -11,14 +11,16 @@ namespace NewWebRunner
     {
         public async Task<(string stringResult, double averageAge, double standardDeviation)> CalculateAverageAndStandardDeviationAsync(List<string> webServerAddresses)
         {
-            string stringResult = string.Empty;
+            StringBuilder stringResult = new StringBuilder();
 
             List<double> ages = new List<double>();
 
             using (HttpClient client = new HttpClient())
             {
-                foreach (string address in webServerAddresses)
+                var tasks = webServerAddresses.Select(async address =>
                 {
+                    double? ageInDays = null;
+
                     try
                     {
                         HttpResponseMessage response = await client.GetAsync(address);
@@ -27,23 +29,28 @@ namespace NewWebRunner
                         {
                             if (response.Content.Headers.LastModified.HasValue)
                             {
-                                //Console.WriteLine($"Last-Modified header found for {address}");
-
                                 DateTimeOffset currentDate = DateTime.Now;
                                 DateTimeOffset lastModifiedDate = response.Content.Headers.LastModified.Value;
 
-                                double ageInDays = (currentDate - lastModifiedDate).TotalDays;
-                                ages.Add(ageInDays);
-                            }
-                            else
-                            {
-                                //Console.WriteLine($"Error: Last-Modified header not found for {address}");
+                                ageInDays = (currentDate - lastModifiedDate).TotalDays;
                             }
                         }
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine($"Error for URL {address}: {ex.Message}");
+                    }
+
+                    return (address, ageInDays);
+                });
+
+                var results = await Task.WhenAll(tasks);
+
+                foreach (var (address, ageInDays) in results)
+                {
+                    if (ageInDays.HasValue)
+                    {
+                        ages.Add(ageInDays.Value);
                     }
                 }
             }
@@ -52,17 +59,17 @@ namespace NewWebRunner
             double standardDeviation = Math.Sqrt(ages.Select(age => Math.Pow(age - averageAge, 2)).Average());
 
             //display urls
-            stringResult += "List of URLS:\n\n";
+            stringResult.AppendLine("List of URLS:\n");
             foreach (string address in webServerAddresses)
             {
-                stringResult += address + "\n";
+                stringResult.AppendLine(address);
             }
 
-            stringResult += "\nAverage Age and Standard Deviation of Web Servers (when was the page modified for the last time):\n\n";
-            stringResult += $"Average Age (in days): {averageAge}\n";
-            stringResult += $"Standard Deviation (in days): {standardDeviation}\n";
+            stringResult.AppendLine("\nAverage Age and Standard Deviation of Web pages (when was the page modified for the last time):\n");
+            stringResult.AppendLine($"Average Age (in days): {averageAge}");
+            stringResult.AppendLine($"Standard Deviation (in days): {standardDeviation}");
 
-            return (stringResult, averageAge, standardDeviation);
+            return (stringResult.ToString(), averageAge, standardDeviation);
         }
     }
 }

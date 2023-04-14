@@ -17,6 +17,7 @@ namespace NewWebRunner
             ServerFrequency serverFrequency = new ServerFrequency();
             ServerAge serverAge = new ServerAge();
             ContentTypeFrequency contentTypeFrequency = new ContentTypeFrequency();
+            RedirectionCounter redirectionCounter = new RedirectionCounter();
 
             List<string> webServerAddresses = new List<string>
             {
@@ -86,6 +87,9 @@ namespace NewWebRunner
                         case 3:
                             (string string3, Dictionary<string, int> stats) = await contentTypeFrequency.GetContentTypeStatisticsAsync(webServerAddresses);
                             result = string3;
+                            break;
+                        case 4:
+                            result = await redirectionCounter.GetRedirectionStatisticsAsync(webServerAddresses);
                             break;
                         default:
                             result = $"There is no scenario {id}";
