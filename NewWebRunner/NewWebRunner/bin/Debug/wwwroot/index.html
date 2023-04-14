@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scenarios</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .scenario-content {
+      margin-top: 20px;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <h1>Scenarios</h1>
+
+  <div id="initial-content">
+    <button onclick="showScenario(1)">Scénario 1</button>
+    <button onclick="showScenario(2)">Scénario 2</button>
+    <button onclick="showScenario(3)">Scénario 3</button>
+  </div>
+
+  <div id="scenario-content" class="hidden scenario-content">
+    <p id="result">Could not retrieve scenario results</p>
+    <button onclick="goBack()">Back</button>
+  </div>
+
+  <script>
+    async function showScenario(scenario) {
+      document.getElementById("initial-content").classList.add("hidden");
+      document.getElementById("scenario-content").classList.remove("hidden");
+
+      document.getElementById("result").textContent = `Retrieving results for scenario ${scenario}...`;
+
+        let response;
+
+        try {
+            response = await fetch(`scenario?id=${scenario}`);
+        } catch (error) {
+            console.error(`Error while retrieving scenario ${scenario}: ${error}`);
+            document.getElementById("result").textContent = `Error while retrieving scenario ${scenario}: ${error}`;
+            return;
+        }
+      
+
+      console.log(`Raw response from server for scenario ${scenario}: ${response}`);
+      const result = await response.text();
+      console.log(`text from server for scenario ${scenario}: ${result}`);
+      document.getElementById("result").innerHTML = result.replace(/\n/g, "<br>");//change \n to <br>
+    }
+
+    function goBack() {
+      document.getElementById("initial-content").classList.remove("hidden");
+      document.getElementById("scenario-content").classList.add("hidden");
+    }
+  </script>
+</body>
+</html>

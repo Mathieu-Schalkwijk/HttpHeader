@@ -1,0 +1,9 @@
+C:\Users\mschalk\Documents\S8\reseaux\webprotocols\questions\NewWebRunner\NewWebRunner\bin\Debug\NewWebRunner.exe.config
+C:\Users\mschalk\Documents\S8\reseaux\webprotocols\questions\NewWebRunner\NewWebRunner\bin\Debug\NewWebRunner.exe
+C:\Users\mschalk\Documents\S8\reseaux\webprotocols\questions\NewWebRunner\NewWebRunner\bin\Debug\NewWebRunner.pdb
+C:\Users\mschalk\Documents\S8\reseaux\webprotocols\questions\NewWebRunner\NewWebRunner\obj\Debug\NewWebRunner.csproj.AssemblyReference.cache
+C:\Users\mschalk\Documents\S8\reseaux\webprotocols\questions\NewWebRunner\NewWebRunner\obj\Debug\NewWebRunner.csproj.SuggestedBindingRedirects.cache
+C:\Users\mschalk\Documents\S8\reseaux\webprotocols\questions\NewWebRunner\NewWebRunner\obj\Debug\NewWebRunner.csproj.CoreCompileInputs.cache
+C:\Users\mschalk\Documents\S8\reseaux\webprotocols\questions\NewWebRunner\NewWebRunner\obj\Debug\NewWebRunner.exe
+C:\Users\mschalk\Documents\S8\reseaux\webprotocols\questions\NewWebRunner\NewWebRunner\obj\Debug\NewWebRunner.pdb
+C:\Users\mschalk\Documents\S8\reseaux\webprotocols\questions\NewWebRunner\NewWebRunner\bin\Debug\wwwroot\index.html
